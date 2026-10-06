@@ -9,6 +9,8 @@ env/
 *.pyo
 *.pyd
 
+.idea/
+.vscode/
 # Локальные системные файлы операционных систем
 .DS_Store
 Thumbs.db
