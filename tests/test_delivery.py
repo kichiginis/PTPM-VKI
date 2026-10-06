@@ -98,7 +98,7 @@ class TestDeliveryCost(unittest.TestCase):
 
     def test_express_doubles_cost(self): #был баг
         """
-        ⚠️ БАГ: экспресс должен УВЕЛИЧИВАТЬ цену, но код умножает на 0.5.
+        БАГ: экспресс должен УВЕЛИЧИВАТЬ цену, но код умножает на 0.5.
         Тест зафиксирует текущее поведение (700 * 0.5 = 350).
         После исправления бага тест нужно обновить.
         """
@@ -133,14 +133,13 @@ class TestDeliveryCost(unittest.TestCase):
     # ---------- Тесты 20-21: Экспресс и дата ----------
 
     def test_express_halves_delivery_days(self):
-        """1000 км -> 2 дня. Экспресс -> 1 день -> 2026-09-04."""
+        """ 2500 км -> 2500//500 = 5 дней -> 2026-09-08."""
         _, date = calculate_delivery_cost(1.0, 1000, "обычный", is_express=True)
         self.assertEqual(date, "2026-09-04")
 
     def test_express_with_short_distance_returns_today(self): #был баг
         """
-        БАГ: 400 км -> max(1, 0) = 1 день. Экспресс: 1 // 2 = 0 дней.
-        Доставка приходит в день отправки (2026-09-03).
+
         """
         _, date = calculate_delivery_cost(1.0, 400, "обычный", is_express=True)
         self.assertEqual(date, "2026-09-04", "/\ Экспресс доставляет за _ дней ")
