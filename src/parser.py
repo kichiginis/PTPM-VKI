@@ -1,70 +1,64 @@
-import hashlib
 import requests
 from bs4 import BeautifulSoup
+from pathlib import Path
+from typing import List, Dict, Any
 
 
 class ForumParser:
-    """Парсер цитат с сайта quotes.toscrape.com."""
+    def __init__(self):
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        }
 
-    HEADERS = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
-        )
-    }
+    def parse_page(self, url: str) -> List[Dict[str, Any]]:
+        response = requests.get(url, headers=self.headers, timeout=15)
+        response.raise_for_status()
+        return self._parse_html(response.text)
 
-    def __init__(self, timeout=10):
-        self.timeout = timeout
+    def parse_file(self, file_path: str) -> List[Dict[str, Any]]:
+        """Вспомогательный метод для парсинга из локальной HTML-фикстуры (для тестов)"""
+        path = Path(file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Файл фикстуры не найден: {file_path}")
 
-    def fetch_html(self, url: str) -> str:
-        """Скачивает HTML по URL."""
-        response = requests.get(url, headers=self.HEADERS, timeout=self.timeout)
-        response.raise_for_status()  # выбросит HTTPError при 4xx/5xx
-        return response.text
+        with open(path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        return self._parse_html(html_content)
 
-    def parse_html(self, html: str) -> list:
-        """
-        Разбирает HTML-строку и возвращает список словарей:
-        [{"id": int, "name": str, "message": str}, ...]
-        """
-        soup = BeautifulSoup(html, "lxml")
-        quotes = soup.find_all("div", class_="quote")
-        result = []
+    def _parse_html(self, html_content: str) -> List[Dict[str, Any]]:
+        soup = BeautifulSoup(html_content, 'lxml')
+        posts = []
 
-        for index, quote in enumerate(quotes, start=1):
-            text_el = quote.find("span", class_="text")
-            author_el = quote.find("small", class_="author")
+        # Находим все таблицы постов по паттерну id="post<число>"
+        post_tables = soup.find_all('table', id=lambda x: x and x.startswith('post') and x[4:].isdigit())
 
-            if text_el is None or author_el is None:
-                continue  # пропускаем битые блоки
+        for table in post_tables:
+            post_id = int(table['id'][4:])
 
-            message = text_el.get_text(strip=True)
-            name = author_el.get_text(strip=True)
+            author_tag = table.find('a', class_='bigusername')
+            author = author_tag.get_text(strip=True).lstrip('@') if author_tag else 'Unknown'
 
-            # Генерируем псевдо-ID из хэша текста (стабильный между запусками)
-            comment_id = int(hashlib.md5(message.encode("utf-8")).hexdigest()[:8], 16)
+            message_div = table.find('div', id=lambda x: x and x.startswith('post_message_'))
+            # Сохраняем внутреннюю HTML-разметку, как требуется в ТЗ
+            message = message_div.decode_contents().strip() if message_div else ""
 
-            result.append({
-                "id": comment_id,
-                "name": name[:256],           # обрезаем под ограничение БД
-                "message": message[:8096],
+            posts.append({
+                'id': post_id,
+                'name': author,
+                'message': message
             })
 
-        return result
+        return posts
 
-    def parse_page(self, url: str) -> list:
-        """Скачивает страницу и возвращает список распарсенных записей."""
-        html = self.fetch_html(url)
-        return self.parse_html(html)
-
-    def save_to_db(self, parsed_data: list, repository) -> int:
-        """
-        Сохраняет данные в БД через DatabaseRepository.
-        Возвращает количество успешно добавленных записей.
-        """
-        added = 0
+    def save_to_db(self, parsed_data: List[Dict[str, Any]], repository: 'DatabaseRepository') -> int:
+        saved_count = 0
         for item in parsed_data:
-            if repository.add(item["id"], item["name"], item["message"]):
-                added += 1
-        return added
+            try:
+                repository.add(item['id'], item['name'], item['message'])
+                saved_count += 1
+            except ValueError:
+                # Игнорируем дубликаты или ошибки валидации при массовом сохранении
+                continue
+        return saved_count

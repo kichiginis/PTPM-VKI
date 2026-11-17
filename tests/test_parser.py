@@ -1,75 +1,133 @@
 import unittest
-import sys
 import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
-
-from parser import ForumParser
-from database import DatabaseRepository
-
-FIXTURE_PATH = os.path.join(os.path.dirname(__file__), "fixtures", "quotes_page.html")
+from src.parser import ForumParser
+from src.database import DatabaseRepository
 
 
 class TestForumParser(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        """Читаем фикстуру один раз для всех тестов."""
-        if not os.path.exists(FIXTURE_PATH):
-            raise FileNotFoundError(
-                f"Фикстура не найдена: {FIXTURE_PATH}. Сохраните страницу вручную."
-            )
-        with open(FIXTURE_PATH, "r", encoding="utf-8") as f:
-            cls.html = f.read()
-
     def setUp(self):
         self.parser = ForumParser()
+        # Путь к фикстуре относительно текущего файла теста
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.fixture_path = os.path.join(current_dir, 'fixtures', 'fixture_cyberforum.html')
 
-    # ============ parse_html ============
+    def test_parse_file_extracts_posts_correctly(self):
+        """Тест 1: Проверка базового извлечения постов"""
+        posts = self.parser.parse_file(self.fixture_path)
 
-    def test_parse_html_returns_non_empty_list(self):
-        result = self.parser.parse_html(self.html)
-        self.assertGreater(len(result), 0)
+        # На странице минимум 3 поста (1 вопрос и 2 ответа)
+        self.assertGreaterEqual(len(posts), 3)
 
-    def test_parse_html_first_item_has_correct_fields(self):
-        result = self.parser.parse_html(self.html)
-        first = result[0]
-        self.assertIn("id", first)
-        self.assertIn("name", first)
-        self.assertIn("message", first)
+        # Проверка первого поста (вопрос от Obel)
+        first_post = posts[0]
+        self.assertEqual(first_post['id'], 15190304)
+        self.assertEqual(first_post['name'], 'Obel')
+        self.assertIn('Market', first_post['message'])
 
-    def test_parse_html_id_is_int(self):
-        result = self.parser.parse_html(self.html)
-        for item in result:
-            self.assertIsInstance(item["id"], int)
+    def test_parse_file_preserves_html_markup(self):
+        """Тест 2: Проверка сохранения HTML-разметки в сообщениях"""
+        posts = self.parser.parse_file(self.fixture_path)
 
-    def test_parse_html_known_author_present(self):
-        """Известный факт: на главной странице есть цитаты Albert Einstein."""
-        result = self.parser.parse_html(self.html)
-        names = [item["name"] for item in result]
-        self.assertIn("Albert Einstein", names)
+        # Проверка второго поста (ответ от vrm2, содержит блоки кода)
+        second_post = posts[1]
+        self.assertEqual(second_post['id'], 15191121)
+        self.assertEqual(second_post['name'], 'vrm2')
+        # Проверяем, что HTML-разметка (теги) сохранилась
+        self.assertIn('<div class="codeblock">', second_post['message'])
+        self.assertIn('<pre class="de1">', second_post['message'])
 
-    def test_parse_html_known_text_present(self):
-        """Известный факт: на странице есть цитата про 'The world as we have created it'."""
-        result = self.parser.parse_html(self.html)
-        messages = [item["message"] for item in result]
-        found = any("The world as we have created it" in m for m in messages)
-        self.assertTrue(found)
+    def test_save_to_db_integration(self):
+        """Тест 3: Интеграционный тест сохранения в БД"""
+        posts = self.parser.parse_file(self.fixture_path)
+        repo = DatabaseRepository(':memory:')
 
-    # ============ save_to_db ============
+        saved_count = self.parser.save_to_db(posts, repo)
 
-    def test_save_to_db_inserts_records(self):
-        result = self.parser.parse_html(self.html)
-        repo = DatabaseRepository(":memory:")
-        added = self.parser.save_to_db(result, repo)
-        self.assertEqual(added, len(result))
+        self.assertEqual(saved_count, len(posts))
+        # Проверяем, что данные действительно попали в БД
+        db_record = repo.get_by_id(15192304)  # ID третьего поста (Shamil1)
+        self.assertIsNotNone(db_record)
+        self.assertEqual(db_record['name'], 'Shamil1')
 
-        # Проверяем, что первая запись есть в БД
-        first = result[0]
-        saved = repo.get_by_id(first["id"])
-        self.assertIsNotNone(saved)
-        self.assertEqual(saved["name"], first["name"])
-        repo.close()
+    def test_parse_file_returns_correct_post_count(self):
+        """Тест 4: Проверка точного количества постов на странице"""
+        posts = self.parser.parse_file(self.fixture_path)
+
+        # На данной странице ровно 3 поста
+        self.assertEqual(len(posts), 3)
+
+    def test_parse_file_all_posts_have_valid_ids(self):
+        """Тест 5: Проверка корректности ID всех постов"""
+        posts = self.parser.parse_file(self.fixture_path)
+
+        expected_ids = [15190304, 15191121, 15192304]
+        actual_ids = [post['id'] for post in posts]
+
+        self.assertEqual(actual_ids, expected_ids)
+        # Все ID должны быть целыми числами
+        for post in posts:
+            self.assertIsInstance(post['id'], int)
+            self.assertGreater(post['id'], 0)
+
+    def test_parse_file_all_posts_have_valid_authors(self):
+        """Тест 6: Проверка корректности имен авторов"""
+        posts = self.parser.parse_file(self.fixture_path)
+
+        expected_authors = ['Obel', 'vrm2', 'Shamil1']
+        actual_authors = [post['name'] for post in posts]
+
+        self.assertEqual(actual_authors, expected_authors)
+        # Все имена должны быть непустыми строками
+        for post in posts:
+            self.assertIsInstance(post['name'], str)
+            self.assertGreater(len(post['name']), 0)
+
+    def test_parse_file_all_posts_have_non_empty_messages(self):
+        """Тест 7: Проверка, что все сообщения непустые"""
+        posts = self.parser.parse_file(self.fixture_path)
+
+        for post in posts:
+            self.assertIsInstance(post['message'], str)
+            self.assertGreater(len(post['message']), 0)
+
+    def test_parse_file_raises_on_nonexistent_file(self):
+        """Тест 8: Проверка обработки несуществующего файла"""
+        nonexistent_path = 'tests/fixtures/nonexistent_file.html'
+
+        with self.assertRaises(FileNotFoundError):
+            self.parser.parse_file(nonexistent_path)
+
+    def test_save_to_db_returns_correct_count(self):
+        """Тест 9: Проверка возвращаемого количества сохраненных записей"""
+        posts = self.parser.parse_file(self.fixture_path)
+        repo = DatabaseRepository(':memory:')
+
+        saved_count = self.parser.save_to_db(posts, repo)
+
+        # Должно сохраниться ровно 3 поста
+        self.assertEqual(saved_count, 3)
+
+    def test_save_to_db_handles_duplicates_gracefully(self):
+        """Тест 10: Проверка корректной обработки дубликатов при сохранении"""
+        posts = self.parser.parse_file(self.fixture_path)
+        repo = DatabaseRepository(':memory:')
+
+        # Сохраняем первый раз
+        first_save_count = self.parser.save_to_db(posts, repo)
+        self.assertEqual(first_save_count, 3)
+
+        # Сохраняем второй раз (те же данные) - дубликаты должны игнорироваться
+        second_save_count = self.parser.save_to_db(posts, repo)
+        self.assertEqual(second_save_count, 0)  # Ничего не сохранилось, т.к. все дубликаты
+
+        # Проверяем, что в БД все еще 3 записи (не 6)
+        all_records = []
+        for post_id in [15190304, 15191121, 15192304]:
+            record = repo.get_by_id(post_id)
+            if record:
+                all_records.append(record)
+
+        self.assertEqual(len(all_records), 3)
 
 
 if __name__ == '__main__':
