@@ -34,15 +34,15 @@ def download_fixture(url: str, output_dir: str = "tests/fixtures", filename: str
                 f.write(response.text)
 
             file_size = full_file_path.stat().st_size
-            print(f"✅ Успешно! Файл сохранен: {full_file_path.resolve()}")
-            print(f"📦 Размер файла: {file_size} байт.")
+            print(f"Успешно! Файл сохранен: {full_file_path.resolve()}")
+            print(f"Размер файла: {file_size} байт.")
 
     except requests.exceptions.RequestException as e:
-        print(f"❌ Ошибка сети: {e}")
-        print("\n💡 САЙТ ЗАБЛОКИРОВАЛ АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ.")
-        print("Используйте Вариант 2 (ручное сохранение) ниже 👇")
+        print(f"Ошибка сети: {e}")
+        print("\nСАЙТ ЗАБЛОКИРОВАЛ АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ.")
+        print("Используйте Вариант 2 (ручное сохранение) ниже")
     except Exception as e:
-        print(f"❌ Непредвиденная ошибка: {e}")
+        print(f"Непредвиденная ошибка: {e}")
 
 
 if __name__ == "__main__":

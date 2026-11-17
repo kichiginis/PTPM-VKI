@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml" dir="ltr" lang="ru">
+<head>
+	<title>Юнит-Тестирование класса-фасада, который использует внешний API - Разработка ПО - Киберфорум</title>
+	<link rel="canonical" href="https://www.cyberforum.ru/development/thread2771076.html" />
+	
+	<base href="https://www.cyberforum.ru/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="keywords" content="Разработка ПО, Юнит-Тестирование класса-фасада, который использует внешний API" />
+<meta name="description" content="Юнит-Тестирование класса-фасада, который использует внешний API Разработка ПО  Решение и ответ на вопрос 2771076" />
+
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" type="text/css" href="//cyberstatic.net/clientscript/vbulletin_css/cyberforum.css" />
+<link rel="stylesheet" type="text/css" href="//cyberstatic.net/clientscript/vbulletin_important.css" />
+
+
+
+<script>
+<!--
+var SESSIONURL = "s=4d4cea25805807eb2198abe0ca5ce6e3&";
+var SECURITYTOKEN = "guest";
+var IMGDIR_MISC = "//cyberstatic.net/images/misc";
+var vb_disable_ajax = parseInt("0", 10);
+// -->
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/connection/connection-min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cyberstatic.net/clientscript/custom/jquery.browser.min.js"></script>
+
+<script src="//cyberstatic.net/clientscript/vbulletin_global2.js"></script>
+
+<script src="//cyberstatic.net/clientscript/vbulletin_menu.js"></script>
+<script src="//cyberstatic.net/clientscript/vbulletin_vbpost.js"></script>
+
+<script src="//cyberstatic.net/clientscript/vbulletin_post_loader.js"></script>
+
+
+<script src="//cyberstatic.net/clientscript/vbulletin_md5.js"></script>
+
+
+
+	<link rel="alternate" type="application/rss+xml" title="Форум программистов и сисадминов Киберфорум RSS Feed" href="https://www.cyberforum.ru/external.php?type=RSS2" />
+	
+		<link rel="alternate" type="application/rss+xml" title="Разработка и тестирование - Киберфорум RSS" href="https://www.cyberforum.ru/external.php?type=RSS2&amp;forumids=100" />
+	
+
+<link type="application/opensearchdescription+xml" rel="search" href="https://www.cyberforum.ru/opensearch.xml" title="CyberForum.ru" />
+<link rel="stylesheet" href="//cyberstatic.net/clientscript/vbulletin_css/geshi.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="//cyberstatic.net/clientscript/vbulletin_css/spoiler.css" />
+<script>
+	var IMGDIR_BUTTON = "//cyberstatic.net/images/buttons";
+</script>
+
+
+<script async src="https://statika.mpsuadv.ru/scripts/1191.js"></script>
+
+
+
+<script>window.yaContextCb=window.yaContextCb||[]</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+
+
+
+	<style type="text/css" id="vbulletin_showthread_css">
+	<!--
+	
+	#links div { white-space: nowrap; }
+	#links img { vertical-align: middle; }
+	-->
+	</style>
+</head>
+<body onload="">
+
+
+
+<div style="min-width: 1100px;  margin: 7px 20px 80px 20px;">
+
+
+
+<div>
+	<div class="page" style="text-align: left;">
+		<div style="margin: 0px 3px 0px 3px" align="left">
+
+
+<div class="vbmenu_popup" id="vbbloglinks_menu" style="display:none;margin-top:3px" align="left">
+	<table cellpadding="4" cellspacing="0" border="0">
+	<tr>
+		<td class="thead"><a href="https://www.cyberforum.ru/blogs/">Блоги</a></td>
+	</tr>
+	
+	<tr>
+		<td class="vbmenu_option"><a href="https://www.cyberforum.ru/blogs/recent-entries/">Последние записи</a></td>
+	</tr>
+	<tr>
+		<td class="vbmenu_option"><a href="https://www.cyberforum.ru/blogs/best-entries/">Лучшие записи</a></td>
+	</tr>
+	<tr>
+		<td class="vbmenu_option"><a href="https://www.cyberforum.ru/blogs/best-blogs/">Лучшие блоги</a></td>
+	</tr>
+	<tr>
+		<td class="vbmenu_option"><a href="https://www.cyberforum.ru/blogs/articles/">Статьи</a></td>
+	</tr>
+	<tr>
+		<td class="vbmenu_option"><a href="https://www.cyberforum.ru/blogs/tags/">Облако меток</a></td>
+	</tr>
+
+	</table>
+</div>
+<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center">
+<tr>
+
+	<td class="alt1 notbordered" width="100%" style="padding-left: 10px">
+		<a href="https://www.cyberforum.ru/"  style="display: block; float: left; margin: 5px 25px 10px 0px"><img loading="lazy" decoding="async" border="0" src="//cyberstatic.net/images/cyberforum_logo.png" height="50px" alt="Форум программистов, компьютерный форум, киберфорум" title="Форум программистов, компьютерный форум, киберфорум" /></a>
+		<div class="smallfont" style="float: right; margin: 0px 0px 0px 20px;">
+			<div class="ya-share2" data-services="vkontakte,odnoklassniki" data-image="//cyberstatic.net/images/cyberforum_logo.png"></div>
+		</div>
+		
+			
+				<span class="forumtitle2">Разработка и тестирование</span>
+			
+			<div class="smallfont"><a href="https://www.cyberforum.ru/" accesskey="1">Форум программистов и сисадминов Киберфорум</a>
+	<span class="navbar"> &gt; <a href="https://www.cyberforum.ru/programming/">Форум программистов</a></span>
+
+	<span class="navbar"> &gt; <a href="https://www.cyberforum.ru/development/">Разработка и тестирование</a></span>
+</div>
+		
+	</td>
+
+	<td class="alt2 notbordered" style="padding: 2px">
+		<table cellpadding="5" cellspacing="3" border="0" width="230px">
+		<tr>
+			<td class="smallfont" style="white-space: nowrap"><b><a href="https://www.cyberforum.ru/auth.php" class="forumtitle2">Войти</a></b></td>
+		</tr>
+		<tr>
+			<td>
+				<b><a href="https://www.cyberforum.ru/register.php">Регистрация</a></b><br/>
+				<a href="https://www.cyberforum.ru/login.php?do=lostpw">Восстановить пароль</a>
+			</td>
+		</tr>
+		</table>
+
+	</td>
+
+</tr>
+</table>
+<div class="tborder" style="padding:0px; border-top-width:0px; margin-bottom: 3px;">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+	<tr align="center">
+		
+		
+		<td class="vbmenu_control"><a id="vbbloglinks" href="https://www.cyberforum.ru/blogs/">Блоги</a><script>vbmenu_register("vbbloglinks");</script></td>
+		
+			<td class="vbmenu_control"><a id="community" href="https://www.cyberforum.ru/development/thread2771076.html?nojs=1#community" accesskey="6">Сообщество</a> <script> vbmenu_register("community"); </script></td>
+		
+		
+			
+				
+				<td class="vbmenu_control"><a id="navbar_search" href="https://www.cyberforum.ru/search.php" accesskey="4">Поиск</a> <script> vbmenu_register("navbar_search"); </script></td>
+			
+			
+		
+		
+		<td class="vbmenu_control" width="100%">&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+
+<table id="yatopbanner" cellspacing="0" cellpadding="2" border="0" align="center" width="100%" class="tborder" style="margin: 0px 0px 3px 0px;"><tr>
+<td width="100%" class="alt1" align="center" valign="middle">
+
+
+
+<div id="yandex_rtb_R-A-29317-1"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-29317-1',
+    blockId: 'R-A-29317-1'
+  })
+})</script>
+
+
+
+</td>
+</tr></table>
+
+<div id="movie_video"></div><script type="text/javascript" src="https://vak345.com/s.js?v=8d94458a2b7741a172956c4b6a86f3a7" async></script>
+
+
+
+
+
+
+	
+	<div class="vbmenu_popup" id="community_menu" style="display:none;margin-top:3px" align="left">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr><td class="thead">Ссылки сообщества</td></tr>
+		
+		<tr><td class="vbmenu_option"><a href="https://www.cyberguru.ru/" target="_blank">CyberGuru.ru - Программирование, исходники</a></td></tr>
+		<tr><td class="vbmenu_option"><a href="https://www.pmtoday.ru/" target="_blank">PMToday.ru - Управление проектами</a></td></tr>
+	
+		
+			<tr><td class="vbmenu_option"><a href="https://www.cyberforum.ru/groups/">Социальные группы</a></td></tr>
+		
+		
+		
+		
+		
+		
+
+
+		</table>
+	</div>
+	
+	
+
+<div class="vbmenu_popup" id="vbfavorites_menu" style="display: none;">
+<table cellpadding="4" cellspacing="0" border="0">
+	
+	
+		
+	<tr>
+		<td class="thead">
+			<a href="https://www.cyberforum.ru/usercp.php">Список закладок</a>
+		</td>
+	</tr>
+	</table>
+</div>
+
+	
+	<div class="vbmenu_popup" id="navbar_search_menu" style="display:none;margin-top:3px" align="left">
+		<table cellpadding="4" cellspacing="0" border="0" width="320px">
+
+    <tr>
+            <td class="thead">Поиск Yandex по форуму</td>
+    </tr>
+<tr>
+<td class="vbmenu_option" title="nohilite">
+
+<div class="ya-site-form ya-site-form_inited_no" onclick="return {'action':'https://www.cyberforum.ru/yandex.php','arrow':false,'bg':'transparent','fontsize':13,'fg':'#000000','language':'ru','logo':'rb','publicname':'Yandex Site Search #364949','suggest':true,'target':'_blank','tld':'ru','type':2,'usebigdictionary':true,'searchid':364949,'webopt':false,'websearch':false,'input_fg':'#000000','input_bg':'#ffffff','input_fontStyle':'normal','input_fontWeight':'normal','input_placeholder':null,'input_placeholderColor':'#000000','input_borderColor':'#7f9db9'}"><form action="https://yandex.ru/sitesearch" method="get" target="_blank"><input type="hidden" name="searchid" value="364949"/><input type="hidden" name="l10n" value="ru"/><input type="hidden" name="reqenc" value=""/><input type="search" name="text" value=""/><input type="submit" value="Найти"/></form></div><style type="text/css">.ya-page_js_yes .ya-site-form_inited_no { display: none; }</style><script>(function(w,d,c){var s=d.createElement('script'),h=d.getElementsByTagName('script')[0],e=d.documentElement;if((' '+e.className+' ').indexOf(' ya-page_js_yes ')===-1){e.className+=' ya-page_js_yes';}s.type='text/javascript';s.async=true;s.charset='utf-8';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//site.yandex.net/v2.0/js/all.js';h.parentNode.insertBefore(s,h);(w[c]||(w[c]=[])).push(function(){Ya.Site.Form.init()})})(window,document,'yandex_site_callbacks');</script>
+
+</td>
+</tr>
+    <tr>
+            <td class="thead">Поиск Google по форуму</td>
+    </tr>
+<tr>
+<td class="vbmenu_option" title="nohilite" width="300px">
+
+<script>
+  (function() {
+    var cx = 'partner-pub-6796001588681838:1260530199';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:searchbox-only resultsUrl="https://www.cyberforum.ru/google.php" newWindow="true"></gcse:searchbox-only>
+
+</td>
+</tr>
+		<tr>
+			<td class="thead">Поиск по форуму</td>
+		</tr>
+
+		<tr>
+			<td class="vbmenu_option"><a href="https://www.cyberforum.ru/search.php" accesskey="4">Расширенный поиск</a></td>
+		</tr>
+
+	
+		<tr><td class="vbmenu_option"><a href="https://www.cyberforum.ru/map.php">Карта форума</a></td></tr>
+	
+		<tr><td class="vbmenu_option"><a href="https://www.cyberforum.ru/map.php?f=100">Темы раздела</a></td></tr>
+	
+		<tr><td class="vbmenu_option"><a href="https://www.cyberforum.ru/map.php?f=-1">Новые блоги</a></td></tr>
+	
+
+
+
+		</table>
+	</div>
+	
+	
+	
+	<div class="vbmenu_popup" id="pagenav_menu" style="display:none">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr>
+			<td class="thead" nowrap="nowrap">К странице...</td>
+		</tr>
+		<tr>
+			<td class="vbmenu_option" title="nohilite">
+			<form action="https://www.cyberforum.ru/index.php" method="get" onsubmit="return this.gotopage()" id="pagenav_form">
+				<input type="text" class="bginput smallfont" id="pagenav_itxt" size="4" />
+				<input type="button" class="button" id="pagenav_ibtn" value="Вперёд" />
+			</form>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+
+
+
+<a name="poststop" id="poststop"></a>
+
+<div style="margin: 0px 0px 3px 0px;"></div>
+
+<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center" style="border-bottom-width:0px">
+<tr>
+	<td class="tcat" width="100%">
+		<div class="smallfont">
+		
+		&nbsp;
+		</div>
+	</td>
+
+<td class="vbmenu_control" id="threadrating" nowrap="nowrap">
+	
+		<span id="threadrating_current">
+			Рейтинг&nbsp;<span title="Средняя оценка">4.55</span>/<span title="Всего голосов">11</span>: <img loading="lazy" decoding="async" class="inlineimg" src="//cyberstatic.net/images/rating/rating_5.gif" alt="Рейтинг темы: голосов - 11, средняя оценка - 4.55" border="0" />
+		</span>
+
+	
+</td>
+
+
+
+
+</tr>
+</table>
+
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div id="posts">
+
+	
+<div>
+	<div class="page" style="text-align: left;">
+		<div style="margin: 0px 3px 0px 3px" align="left">
+
+	<div id="edit15190304" style="padding:0px 0px 3px 0px">
+	<!-- this is not the last post shown on the page -->
+
+
+
+<table id="post15190304" class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center">
+<tr valign="top">
+	
+	<td class="alt2 bordered_right notbordered_top" width="170px" rowspan="3">
+            <div>
+               
+                    
+                        <a class="bigusername" href="https://www.cyberforum.ru/members/1575629.html"><span id="tagg_1575629" style="display:none;">@</span>Obel</a>
+                    
+                    
+               
+            </div>
+			
+			
+			
+			
+		
+			<div class="smallfont" style="margin-top: 2px;">
+				
+					
+					<div><span id="repdisplay_15190304_1575629" title="Репутация пользователя" style="font-weight: bold">0</span> / <span title="Общая оценка (+0, -0)">0</span> / <span title="Лучшие ответы" style="font-weight: bold">0</span></div>
+				<div>Регистрация: 30.01.2020</div>
+				
+				<div>Сообщений: 2</div>
+				
+				
+				
+<!-- show awards -->
+
+<!-- /show awards -->
+
+				
+			</div>
+		
+	</td>
+	
+</tr>
+<tr>
+	
+		<td class="alt2 smallfont notbordered" style="font-weight:normal; padding: 3px 5px 3px 5px;" height="18px" >
+		
+			
+		</td>
+		<td class="alt2 smallfont notbordered" style="font-weight: normal; padding: 3px 5px 3px 5px; text-align: right;"  width="30px" height="18px">
+	
+
+	
+	
+	
+</td>
+	
+</tr>
+
+<tr valign="top">
+		<td class="alt1 notbordered" colspan="2" id="td_post_15190304" style="padding-top: 3px" >
+
+		
+			<h1 class="content">Юнит-Тестирование класса-фасада, который использует внешний API</h1>
+			<div class="smallfont shade" style="margin: 10px 0px 0px 30px">18.01.2021, 15:11. <b>Показов</b> 2188. <b>Ответов</b> 2</div>
+			<div class="smallfont shade" style="margin: 5px 0px 0px 30px"><b>Метки</b> нет <img loading="lazy" decoding="async" src="//cyberstatic.net/images/misc/11x11progress.gif" id="tag_form_progress" class="inlineimg" style="display:none" alt="" /> (<a href="https://www.cyberforum.ru/tags/">Все метки</a>)</div>
+			<hr size="1" style="color: #AAAAAA; margin: 7px 0px 10px 0px" />
+		
+
+		
+
+		
+			
+		
+		<div id="post_message_15190304" style="margin: 2px 2px 2px 5px;">
+		
+			
+			<div style="float: right; margin: 0px 0px 10px 10px">
+				<a rel="nofollow noopener sponsored" target="_blank" href="https://ref.studwork.ru/new-order?p=459015"><img src="https://h20x37ek96.a.trbcdn.net/banners-v2/student/2/300x250.jpg" srcset="https://h20x37ek96.a.trbcdn.net/banners-v2/student/2/300x250.jpg 1x, https://h20x37ek96.a.trbcdn.net/banners-v2/student/2/300x250_@2x.jpg 2x" loading="lazy" alt="Студворк — интернет-сервис помощи студентам"></a>
+			</div>
+			
+		
+			
+
+			Подскажите, как тестировать фасад-класс и его классы-клиенты, при условии, что данному фасаду нужны не контролируемые внешние данные, например, он использует внешний API.<br />
+<br />
+<u>Пример:</u><br />
+Класс <b>Market</b> использует некий API и оборачивает его вызовы в простые и понятные методы для остальный классов- пользователей:<br />
+<br />
+<div class="codeblock"><table class="python"><thead><tr><td colspan="2" id="878308869"  class="head">Python</td></tr></thead><tbody><tr class="li1"><td><div id="878308869" style="height: 94px" class="codeframe"><table><tr class="li1"><td class="ln" style="padding: 0px 10px 0px 5px;"><pre class="de1">1
+2
+3
+4
+</pre></td><td class="de1"><pre class="de1">market <span class="sy0">=</span> Market<span class="br0">&#40;</span><span class="br0">&#41;</span>
+market.<span class="me1">get_last_price</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+market.<span class="me1">get_staff_amount</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+...</pre></td></tr></table></div></td></tr></tbody></table></div>Остальные классы-пользователи класса <b>Market</b> используют объект <b>market</b> для вытягивания данных.<br />
+<br />
+<u>Вопрос:</u><br />
+Как теперь создать unittest-ы, которые смогут тестировать хотяб остальные классы, которые используют объект market?<br />
+Я попробовал создать в тестах заглушку <b>Market</b> со статическим набором заведомо известных данных. Но не могу заставить без правки основного кода использовать нужный объект, порождённый для теста в случае тестовых методов.
+
+		
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		
+			
+		
+
+		
+			<div style="margin-top: 5px">
+				<span id="thumbs_box_15190304">
+    <span class="post">
+        <span>
+            
+            <span class="thumbs-post-rate" title="Рейтинг сообщения 0">0</span>
+            
+        </span>
+    </span>
+</span>
+			</div>
+		
+		
+		
+	</td>
+</tr>
+
+</table>
+
+
+
+<div id="krba_posts_2771076" class="tborder alt1 smallfont" style="margin-top: 3px;"><div class="alt2" style="border-bottom: 0px solid #AAAAAA; padding: 3px 5px 3px 5px; font-weight:bold;"> Лучшие ответы (<span id="krba_answcount_2771076">1</span>)</div><div style="margin: 5px;" class="smallfont"><span id="krba_removepost_15191121" style="padding: 5px; white-space: nowrap; font-weight: bold;"><a style="text-decoration: none;" href="https://www.cyberforum.ru/development/thread2771076.html#post15191121">Сообщение: #15191121</a> </span> </div></div>
+
+
+
+<div style="margin: 3px 0px 3px 0px; display: block">
+	<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%">
+		<tr valign="top">
+			
+			<td class="alt2  bordered_right notbordered_top" width="170px" rowspan="2"></td>
+			
+		</tr>
+		<tr>
+		    <td class="alt1 notbordered" align="left">
+
+<div id="mp_custom_9966"></div> <script>window.mpsuStart = window.mpsuStart || [], window.mpsuStart.push(9966);</script>
+
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+<div style="margin: 3px 0px 0px 0px">
+	<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" style="border-top: 0px">
+		<tr valign="top">
+			
+			<td class="alt2 bordered" width="170px" rowspan="2">
+				<div class="smallfont" style="margin-top: 2px;">
+				
+					<a class="bigusername" href="https://www.cyberforum.ru/members/20461.html">Programming</a>
+					<div class="smallfont">Эксперт</div>
+					<div><span title="Репутация пользователя"><b>39485</b></span> / <span title="Благодарности за сообщения">9562</span> / <span title="Лучшие ответы"><b>3019</b></span></div>
+					<div>Регистрация: 12.04.2006</div>
+					<div>Сообщений: 41,671</div>
+					<a href="https://www.cyberforum.ru/blogs/articles/">Блог</a></div>
+				
+				</div>
+			</td>
+			
+		    <td class="alt2 smallfont notbordered_right" style="font-weight:normal; padding: 3px 5px 3px 5px;" height="18px">
+		
+			
+			18.01.2021, 15:11
+			
+		    </td>
+		</tr>
+		<tr>
+			<td class="alt1 notbordered" align="left">
+			<div style="margin: 2px 2px 2px 5px;">
+				Ответы с готовыми решениями: 
+					<br />
+					<p><strong><a target="_blank" href="https://www.cyberforum.ru/php-beginners/thread2035144.html">Тестирование (или Юнит тестирование)</a></strong><br />Доброго времени суток, возник такой вопрос, раньше встречался на фронтенде с js тестированием, сейчас задался вопросом по поводу...</p><p><strong><a target="_blank" href="https://www.cyberforum.ru/csharp-beginners/thread2419287.html">Создание юнит теста для проверки сборки (.dll, .exe) на наличие класса с заданным именем, который содержит 3 метода</a></strong><br />Здравствуйте! Помогите создать юнит теста для проверки сборки (.dll, .exe) на наличие класса с заданным именем, который содержит 3 метода....</p><p><strong><a target="_blank" href="https://www.cyberforum.ru/cpp-cli/thread1806376.html">C++/CLI враппер для C++ класса, который использует PCL (Point Cloud Library)</a></strong><br />Доброго времени суток.  
+Пишу сюда так как не являюсь C++ разработчиком и столкнулся с проблемой которую не могу решить длительное время. ...</p>
+				
+			</div>
+			
+<span class="thumbs-post-rate" title="Рейтинг сообщения 2">2</span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</div>
+	
+		</div>
+	</div>
+</div>
+
+
+	
+<div>
+	<div class="page" style="text-align: left;">
+		<div style="margin: 0px 3px 0px 3px" align="left">
+
+	<div id="edit15191121" style="padding:0px 0px 3px 0px">
+	<!-- this is not the last post shown on the page -->
+
+
+
+<table id="post15191121" class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center">
+<tr valign="top">
+	
+	<td class="alt2 bordered_right notbordered_top" width="170px" rowspan="3">
+            <div>
+               
+                    
+                        <a class="bigusername" href="https://www.cyberforum.ru/members/717800.html"><span id="tagg_717800" style="display:none;">@</span>vrm2</a>
+                    
+                    
+               
+            </div>
+			
+			
+			
+			
+		
+			<div class="smallfont" style="margin-top: 2px;">
+				
+					
+					<div><span id="repdisplay_15191121_717800" title="Репутация пользователя" style="font-weight: bold">431</span> / <span title="Общая оценка (+302, -0)">302</span> / <span title="Лучшие ответы" style="font-weight: bold">90</span></div>
+				<div>Регистрация: 03.12.2015</div>
+				
+				<div>Сообщений: 741</div>
+				
+				
+				
+<!-- show awards -->
+
+<!-- /show awards -->
+
+				
+			</div>
+		
+	</td>
+	
+</tr>
+<tr>
+	
+		<td class="alt2 smallfont notbordered" style="font-weight:normal; padding: 3px 5px 3px 5px;" height="18px" >
+		
+			
+				18.01.2021, 19:35
+				
+				
+				
+			
+		</td>
+		<td class="alt2 smallfont notbordered" style="font-weight: normal; padding: 3px 5px 3px 5px; text-align: right;"  width="30px" height="18px">
+	
+
+	
+	
+	
+</td>
+	
+</tr>
+
+<tr valign="top">
+		<td class="alt1 notbordered" colspan="2" id="td_post_15191121" style="padding-top: 3px" >
+
+		
+
+		
+
+		
+			<div class="smallfont" style="background-color: #cde6ee; border: 1px solid #0B57A5; margin: 0px 0px 15px 0px; padding: 2px 5px 7px; color: #000;">
+				<img loading="lazy" decoding="async" src="//cyberstatic.net/images/misc/tick.png" alt="Лучший ответ" /> <b>Сообщение было отмечено Obel как решение</b>
+			</div>
+			<h2>Решение</h2>
+		
+		<div id="post_message_15191121" style="margin: 2px 2px 2px 5px;">
+		
+			
+
+			1. Как тестировать класс Market<br />
+<br />
+Лучше всего написать интеграционный тест, в котором Market будет подключаться к <b>реальному</b> источнику данных.  Как минимум, проверить, что все действия выполнены (get_last_price и get_staff_amount) без ошибок.<br />
+<br />
+Это позволит избежать ошибок, если у внешнего сервиса поменяется API.<br />
+<br />
+2. Как тестировать клиентов Market<br />
+<br />
+Для таких классов Market является зависимостью. Лучше всего в такой класс передавать уже настроенный экземпляр класса Market - см. Dependency Injection.<br />
+<br />
+<div class="codeblock"><table class="python"><thead><tr><td colspan="2" id="679407383"  class="head">Python</td></tr></thead><tbody><tr class="li1"><td><div id="679407383" style="height: 62px" class="codeframe"><table><tr class="li1"><td class="ln" style="padding: 0px 10px 0px 5px;"><pre class="de1">1
+2
+</pre></td><td class="de1"><pre class="de1">my_market <span class="sy0">=</span> Market<span class="br0">&#40;</span>api_key<span class="sy0">=</span>...<span class="br0">&#41;</span>
+client <span class="sy0">=</span> MarketClient<span class="br0">&#40;</span>market<span class="sy0">=</span>my_market<span class="br0">&#41;</span></pre></td></tr></table></div></td></tr></tbody></table></div>Для unit-тестирования класса MarketClient нужно передать ему <b>mock</b> вместо реального класса Market. Этот мок предотвратит вызовы к внешнему сервису (спрятанному за Market) и будет возвращать нужные данные, которые мы хотим получить во время тестирования.<br />
+<br />
+<div class="codeblock"><table class="python"><thead><tr><td colspan="2" id="774651427"  class="head">Python</td></tr></thead><tbody><tr class="li1"><td><div id="774651427" style="height: 126px" class="codeframe"><table><tr class="li1"><td class="ln" style="padding: 0px 10px 0px 5px;"><pre class="de1">1
+2
+3
+4
+5
+6
+</pre></td><td class="de1"><pre class="de1">market <span class="sy0">=</span> Mock<span class="br0">&#40;</span><span class="br0">&#41;</span>
+market.<span class="me1">get_last_price</span>.<span class="me1">return_value</span> <span class="sy0">=</span> <span class="nu0">10</span>
+&nbsp;
+client <span class="sy0">=</span> MarketClient<span class="br0">&#40;</span>market<span class="sy0">=</span>market<span class="br0">&#41;</span>
+client.<span class="me1">do_action</span><span class="br0">&#40;</span><span class="br0">&#41;</span> &nbsp;<span class="co1"># если client вызовет market.get_last_price(), то он получит ответ 10</span>
+<span class="kw1">assert</span> ...</pre></td></tr></table></div></td></tr></tbody></table></div>
+
+		
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		
+
+		
+			<div style="margin-top: 5px">
+				<span id="thumbs_box_15191121">
+    <span class="post">
+        <span>
+            
+            <span class="thumbs-post-rate" title="Рейтинг сообщения 1">1</span>
+            
+        </span>
+    </span>
+</span>
+			</div>
+		
+		
+		
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</div>
+	
+		</div>
+	</div>
+</div>
+
+
+	
+<div>
+	<div class="page" style="text-align: left;">
+		<div style="margin: 0px 3px 0px 3px" align="left">
+
+	<div id="edit15192304" style="padding:0px 0px 3px 0px">
+	
+
+
+
+<table id="post15192304" class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center">
+<tr valign="top">
+	
+	<td class="alt2 bordered_right notbordered_top" width="170px" rowspan="3">
+            <div>
+               
+                    
+                        <a class="bigusername" href="https://www.cyberforum.ru/members/547277.html"><span id="tagg_547277" style="display:none;">@</span><font color="#991199">Shamil1</font></a>
+                    
+                    
+               
+            </div>
+			<div class="smallfont">Модератор</div>
+			<div class="smallfont" style="margin-top: 3px"><img src="https://cyberstatic.net/images/icons/functional.png" alt="Эксперт функциональных языков программирования" border="" style="margin-right: 5px" /></div>
+			
+			
+		
+			<div class="smallfont" style="margin-top: 2px;">
+				
+					
+					<div><span id="repdisplay_15192304_547277" title="Репутация пользователя" style="font-weight: bold">3143</span> / <span title="Общая оценка (+2291, -0.5)">2291</span> / <span title="Лучшие ответы" style="font-weight: bold">469</span></div>
+				<div>Регистрация: 26.03.2015</div>
+				
+				<div>Сообщений: 8,921</div>
+				
+				
+				
+<!-- show awards -->
+
+<!-- /show awards -->
+
+				
+			</div>
+		
+	</td>
+	
+</tr>
+<tr>
+	
+		<td class="alt2 smallfont notbordered" style="font-weight:normal; padding: 3px 5px 3px 5px;" height="18px" >
+		
+			
+				19.01.2021, 10:26
+				
+				
+				
+			
+		</td>
+		<td class="alt2 smallfont notbordered" style="font-weight: normal; padding: 3px 5px 3px 5px; text-align: right;"  width="30px" height="18px">
+	
+
+	
+	
+	
+</td>
+	
+</tr>
+
+<tr valign="top">
+		<td class="alt1 notbordered" colspan="2" id="td_post_15192304" style="padding-top: 3px" >
+
+		
+
+		
+
+		
+			
+		
+		<div id="post_message_15192304" style="margin: 2px 2px 2px 5px;">
+		
+			
+
+			
+<table width="95%"  class="bbcode_maincontainer"><tr><td>
+	<div class="bbcode_container">
+	  <div class="bbcode_quote">
+	    <div class="btbtbt">
+		<div class="quote_container">
+	      	<div class="bbcode_quote_container"></div>
+	       	<div class="bbcode_postedby">
+	         	
+				<img loading="lazy" decoding="async" title="Цитата" src="//cyberstatic.net/images/buttons/quote_icon.png" alt="Цитата" />
+				Сообщение от <strong>Obel</strong>
+				<a href="https://www.cyberforum.ru/development/thread2771076.html#post15190304"><img loading="lazy" decoding="async" class="inlineimg" src="//cyberstatic.net/images/buttons/viewpost-right.png" border="0" alt="Посмотреть сообщение" /></a>
+	         	
+	        </div>
+	        <div class="message">Но не могу заставить без правки основного кода использовать нужный объект</div>
+	      </div>
+			</div> 
+		</div>
+	</div>
+</td></tr></table>Передавайте экземпляр Market в конструктор &quot;основного кода&quot;. Для тестов передавайте тестовый вариант.
+
+		
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		
+
+		
+			<div style="margin-top: 5px">
+				<span id="thumbs_box_15192304">
+    <span class="post">
+        <span>
+            
+            <span class="thumbs-post-rate" title="Рейтинг сообщения 0">0</span>
+            
+        </span>
+    </span>
+</span>
+			</div>
+		
+		
+		
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="background-color: #FFFACD; border: 1px solid #AAAAAA; margin: 3px 0px 0px 0px; padding: 7px; text-align:center; font-size: 10pt">
+<b>Надоела реклама? <a href="https://www.cyberforum.ru/register.php">Зарегистрируйтесь</a> и она исчезнет полностью.</b>
+</div>
+
+
+
+<div style="margin: 3px 0px 0px 0px">
+	<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" style="border-top: 0px">
+		<tr valign="top">
+			
+			<td class="alt2 bordered" width="170px" rowspan="2">
+				<div class="smallfont" style="margin-top: 2px;">
+				
+					<a class="bigusername" href="https://www.cyberforum.ru/members/15780.html">inter-admin</a>
+					<div class="smallfont">Эксперт</div>
+					<div><span title="Репутация пользователя"><b>29715</b></span> / <span title="Благодарности за сообщения">6470</span> / <span title="Лучшие ответы"><b>2152</b></span></div>
+					<div>Регистрация: 06.03.2009</div>
+					<div>Сообщений: 28,500</div>
+					<a href="https://www.cyberforum.ru/blogs/">Блог</a></div>
+				
+				</div>
+			</td>
+			
+		    <td class="alt2 smallfont notbordered_right" style="font-weight:normal; padding: 3px 5px 3px 5px;" height="18px">
+		
+			
+			19.01.2021, 10:26
+			
+		    </td>
+		</tr>
+		<tr>
+		    <td class="alt1 notbordered" align="left">
+			<div style="margin: 2px 2px 2px 5px;">
+				<p><a target="_blank" href="https://www.cyberforum.ru/programming-theory/thread795659.html">Тести&#769;рование програ&#769;ммного обеспе&#769;чения(Модульное тестирование, или юнит-тестирование)</a><br />Извиняюсь перед администрацией что разместил тему в несоответствующем разделе, не мог найти про тестирование ПО. На днях встал  вопрос о...</p><p><a target="_blank" href="https://www.cyberforum.ru/csharp-beginners/thread1650048.html">Юнит тестирование</a><br />Добрый день. Осваиваю азы написания юнит тестов.  
+С обычными калькуляторами, простыми классами, возвращающими значения разобрался.  
+Но...</p><p><a target="_blank" href="https://www.cyberforum.ru/cpp-beginners/thread1930566.html">Юнит-тестирование</a><br />Расскажите про юнит тест на с++ , как его писать?Синтаксис?   
+(У меня такое задание: написать юнит тест к программе которая находит...</p><p><a target="_blank" href="https://www.cyberforum.ru/cpp-beginners/thread781876.html">Юнит-тестирование</a><br />Всем доброго времени суток!  
+В последнее время меня начал сильно интересовать вопрос о юнит-тестировании: что это такое и с чем его едят. ...</p><p><a target="_blank" href="https://www.cyberforum.ru/cpp-beginners/thread2144688.html">Юнит тестирование С++ (Google Mock)</a><br />Добрый день. Я только начинаю знакомиться с Юнит тестированием и фреймворком Google. может ли мне кто-нибудь подсказать, почему данный тест...</p>
+
+				
+					<br />
+					<a target="_blank" href="https://www.cyberforum.ru/search.php?do=process&amp;q=Юнит-Тестирование класса-фасада, который использует внешний API&amp;forumchoice[]=100&amp;childforums=1&amp;replyless=0&amp;replylimit=1&amp;nocache=0">Искать еще темы с ответами</a>
+					<br /><br />
+					Или воспользуйтесь поиском по форуму:
+					<table width="700px"><tr><td>
+						<div class="ya-site-form ya-site-form_inited_no" onclick="return {'action':'https://www.cyberforum.ru/yandex.php','arrow':false,'bg':'transparent','fontsize':13,'fg':'#000000','language':'ru','logo':'rb','publicname':'Yandex Site Search #364949','suggest':true,'target':'_blank','tld':'ru','type':2,'usebigdictionary':true,'searchid':364949,'webopt':false,'websearch':false,'input_fg':'#000000','input_bg':'#ffffff','input_fontStyle':'normal','input_fontWeight':'normal','input_placeholder':null,'input_placeholderColor':'#000000','input_borderColor':'#7f9db9'}"><form action="https://yandex.ru/sitesearch" method="get" target="_blank"><input type="hidden" name="searchid" value="364949"/><input type="hidden" name="l10n" value="ru"/><input type="hidden" name="reqenc" value=""/><input type="search" name="text" value=""/><input type="submit" value="Найти"/></form></div><style type="text/css">.ya-page_js_yes .ya-site-form_inited_no { display: none; }</style><script>(function(w,d,c){var s=d.createElement('script'),h=d.getElementsByTagName('script')[0],e=d.documentElement;if((' '+e.className+' ').indexOf(' ya-page_js_yes ')===-1){e.className+=' ya-page_js_yes';}s.type='text/javascript';s.async=true;s.charset='utf-8';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//site.yandex.net/v2.0/js/all.js';h.parentNode.insertBefore(s,h);(w[c]||(w[c]=[])).push(function(){Ya.Site.Form.init()})})(window,document,'yandex_site_callbacks');</script>
+					</td></tr></table>
+				
+			</div>
+			
+<span class="thumbs-post-rate" title="Рейтинг сообщения 3">3</span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+	</div>
+	
+		</div>
+	</div>
+</div>
+
+<div id="lastpost"></div>
+</div>
+
+
+<div>
+	<div class="page" style="text-align: left;">
+		<div style="margin: 0px 3px 0px 3px" align="left">
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr valign="top">
+	
+		<td>
+			<table class="smallfont" width="240px" cellspacing="0" cellpadding="0" border="0"><tr>
+				<td>
+					<a target="_blank" href="https://www.cyberforum.ru/newreply.php?do=newreply&amp;noquote=1&amp;p=15192304"><img loading="lazy" decoding="async" class="buttonimg" src="//cyberstatic.net/images/buttons/reply.png" alt="Ответ" border="0" /></a>
+				</td>
+				<td>
+					<a target="_blank" href="https://www.cyberforum.ru/newthread.php?do=newthread&amp;f=100"><img loading="lazy" decoding="async" class="buttonimg" src="//cyberstatic.net/images/buttons/newthread.png" alt="Создать тему" border="0" /></a>
+				</td>
+			</tr></table>
+		</td>
+	
+	
+	
+</tr>
+</table>
+
+
+
+
+
+
+	<script src="//cyberstatic.net/clientscript/vbulletin_lightbox.js"></script>
+	<script>
+	<!--
+	vBulletin.register_control("vB_Lightbox_Container", "posts", 1);
+	//-->
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+<tr valign="bottom">
+	<td width="100%" valign="top">
+		
+	</td>
+	<td class="smallfont" align="right">
+		
+	</td>
+</tr>
+</table>
+
+<table cellspacing="0" cellpadding="2" border="0" align="center" width="100%" class="tborder" style="margin: 3px 0px 3px 0px;"><tr>
+<td width="100%" class="alt1" align="center" valign="middle">
+
+
+<div id="yandex_rtb_R-A-29317-4"></div>
+<script>
+window.yaContextCb.push(() => {
+    Ya.Context.AdvManager.render({
+        "blockId": "R-A-29317-4",
+        "renderTo": "yandex_rtb_R-A-29317-4"
+    })
+})
+</script>
+
+
+</td>
+</tr></table>
+
+
+
+<table class="tborder" cellpadding="5" cellspacing="0" border="0" width="100%" align="center" style="margin: 5px 0px 0px 0px">
+<thead>
+	<tr>
+		<td class="tcat" colspan="4">
+      			Новые блоги и статьи
+			<a style="float:right" href="https://www.cyberforum.ru/development/thread2771076.html#top" onclick="return toggle_collapse('latest_blogs')"><img loading="lazy" decoding="async" id="collapseimg_latest_blogs" src="//cyberstatic.net/images/buttons/collapse_tcat.gif" alt="" border="0" /></a>
+			
+			<div style="float: right"><a href="https://www.cyberforum.ru/blogs/articles/"><strong>Все статьи</strong></a>&nbsp;&nbsp;</div>
+			<div style="float: right"><a href="https://www.cyberforum.ru/blogs/recent-entries/"><strong>Все блоги</strong></a>&nbsp;/&nbsp;</div>
+			
+		</td>
+	</tr>
+</thead>
+<tbody id="collapseobj_latest_blogs" style="">
+	<tr>
+				<td class="alt1" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/359708/11154.html">Транслитерация текста с кириллицы на латиницу (вариант №5)</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">Maks 17.11.2026</div>
+					<div class="smallfont">Дабы оставить позади все споры о том, какая буква каким образом должна транслитерироваться на латиницу - решил таки доработать данное решение и довести его до мало-мальски логического завершения. . . . </div>
+				</td>
+				<td class="alt2" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/1083385/11152.html">Просмотровщик HLP и конвертер в CHM</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">Argus19 16.11.2026</div>
+					<div class="smallfont">Просмотровщик HLP и конвертер в CHM 
+ 
+Давно хотел переделать справку Microsoft® Win32® Programmer's Reference, чтобы иметь её под рукой.  
+Но использовать несколько программ не удобно.  Искал другие. . . </div>
+				</td>
+				<td class="alt1" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/1851672/11151.html">BitTorrent (версия 7.11 English) и Меню Настройки</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">russiannick 15.11.2026</div>
+					<div class="smallfont">Пункты, отвечающие за отключение обновлений в BitTorrent версии 7. 11 (английской)   
+ 
+ 
+Options 
+ 
+	Preferences 
+ 
+		General 
+ 
+			Language</div>
+				</td>
+				<td class="alt2" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/359708/11149.html">Транслитерация текста с кириллицы на латиницу (вариант №4)</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">Maks 15.11.2026</div>
+					<div class="smallfont">Что-то я перемудрил с предыдущими версиями, в этот раз сделал всё проще, обратившись к функции &quot;СтрокаЛатиницей&quot; из типового общего модуля &quot;СтроковыеФункцииКлиент&quot;.  
+В данной функции нет апострофов,. . . </div>
+				</td><tr>
+				<td class="alt1" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/1851672/11150.html">BitTorrent (версия 4.3.9) и Меню Настройки</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">russiannick 15.11.2026</div>
+					<div class="smallfont">В меню Настройки можно отключить автоматическое обновление программы.   
+Карта этого меню приложена ниже.   
+Нужный пункт выделен красным.  
+ 
+Сервис 
+ 
+	Настройки 
+ 
+		Поведение</div>
+				</td>
+				<td class="alt2" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/359708/11148.html">Транслитерация текста с кириллицы на латиницу (вариант №3)</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">Maks 15.11.2026</div>
+					<div class="smallfont">Обновленная версия предыдущей обработки.  
+ 
+Изменения коснулись букв: Ъ, Ы, Ь, Э, отображения которых зависят от положения реквизита  &quot;Транслитерация имён&quot;.  
+Изменено отображение буквы Й.  
+Добавлена. . . </div>
+				</td>
+				<td class="alt1" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/359708/11147.html">Транслитерация текста с кириллицы на латиницу (вариант №2)</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">Maks 13.11.2026</div>
+					<div class="smallfont">Обновленная версия ранее созданной обработки.  
+ 
+Добавлено: 
+- Проверка исходного текста на кириллицу, через обращение к стандартной функции &quot;ТолькоКириллицаВСтроке&quot; из общего модуля. . . </div>
+				</td>
+				<td class="alt2" valign="top" width="25%">
+					<b><a href="https://www.cyberforum.ru/blogs/914198/11115.html">Часы с термометром и праздничным календарем</a></b>
+					<div class="smallfont shade" style="margin: 5px 0px 5px 0px">yariko 12.11.2026</div>
+					<div class="smallfont">Сегодня мы рассмотрим как можно сделать отличные многофункциональные часы.  
+ 
+Итак, поставим конкретную задачу: разработать часы с календарем, двумя термодатчиками, выводом поздравительных сообщений. . . </div>
+				</td></tr>
+</tbody>
+</table>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div style="margin: 5px 3px 0px 3px">
+<form action="https://www.cyberforum.ru/index.php" method="get" style="clear:left">
+<table cellpadding="5" cellspacing="0" border="0" class="tborder" align="center" style="width: 100%;">
+<tr>
+	
+	
+		<td class="tfoot">
+			<span class="smallfont">КиберФорум - форум программистов, компьютерный форум, программирование</span>
+		</td>
+	<td class="tfoot" align="right" colspan="2">
+		<div class="smallfont">
+			<strong>
+				<a href="https://www.cyberforum.ru/donate.php">Поддержать</a> -
+				
+				<a href="https://www.cyberforum.ru/advert.php">Реклама</a> -
+				
+				
+				
+				
+				
+				
+				<a href="https://www.cyberforum.ru/announcement.php?a=3">Условия использования</a> -
+				<a href="https://www.cyberforum.ru/sendmessage.php" accesskey="9">Обратная связь</a>
+			</strong>
+		</div>
+	</td>
+</tr>
+</table>
+<table cellpadding="5" cellspacing="0" border="0" class="tborder" align="center" style="width: 100%;">
+<tr class="alt1" align="right">
+	<td align="left" class="smallfont">
+		Powered by vBulletin<br />Copyright &copy;2000 - 2026, CyberForum.ru
+	</td>
+	<td align="right">
+
+<img id="licnt3981" width="88" height="31" style="border:0" 
+title="LiveInternet: number of pageviews for 24 hours, of visitors for 24 hours and for today is shown"
+src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP/yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+alt=""/><script>(function(d,s){d.getElementById("licnt3981").src=
+"//counter.yadro.ru/hit?t12.2;r"+escape(d.referrer)+
+((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+(s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+";h"+escape(d.title.substring(0,150))+";"+Math.random()})
+(document,screen)</script>
+
+	</td>
+</tr>
+</table>
+</form>
+
+
+<table cellspacing="0" cellpadding="2" border="0" align="center" width="100%" class="tborder" style="margin: 3px 0px 3px 0px;"><tr>
+<td width="100%" class="alt1" align="center" valign="middle">
+
+<div id="yandex_rtb_R-A-29317-24"></div>
+<script>
+window.yaContextCb.push(() => {
+    Ya.Context.AdvManager.render({
+        "blockId": "R-A-29317-24",
+        "renderTo": "yandex_rtb_R-A-29317-24",
+        "type": "feed"
+    })
+})
+</script>
+
+</td>
+</tr></table>
+
+
+</div>
+
+<script>
+var krtsts = {
+   "bburl": "https://www.cyberforum.ru"
+};
+</script>
+<script async src="//cyberstatic.net/clientscript/kr_scripts/tests/addedit.js"></script>
+<script async src="//cyberstatic.net/clientscript/kr_scripts/bestanswer/bestanswer.js"></script>
+<script>
+      var krba_options = {
+          img_is_answer: '//cyberstatic.net/images/buttons/is_answer.png',
+          img_is_not_answer: '//cyberstatic.net/images/buttons/is_not_answer.png'
+      },
+      KRBA = new AJAX_KRBA(krba_options);
+</script>
+
+<link rel="stylesheet" type="text/css" href="//cyberstatic.net/clientscript/kr_scripts/thumbsup/thumbs.css" />
+<script>
+var krthumbs = {
+  confirm_delete_pos: 'Вы действительно хотите удалить все положительные оценки?',
+  confirm_delete_neg: 'Вы действительно хотите удалить все отрицательные оценки?'
+}
+</script>
+<script async src="//cyberstatic.net/clientscript/kr_scripts/thumbsup/thumbsup.js"></script>
+
+<script>
+var krtsts = new krtsts_ctrl();
+</script>
+
+<style type="text/css">
+	span.sortarrow {position:absolute;}
+	span.sortarrow img {border:0;}
+	a.sortheader {text-decoration:none; display:block; width:100%;}
+</style>
+
+<script async src="//cyberstatic.net/clientscript/vbulletin_autosave.js"></script>
+<script async src="//cyberstatic.net/clientscript/custom/CtrlPagenav.js"></script>
+<script async src="//cyberstatic.net/clientscript/custom/spoiler.js"></script>
+<script async src="//cyberstatic.net/clientscript/custom/topbutton.js"></script>
+<script async src="//cyberstatic.net/clientscript/sorttable.js"></script>
+
+<script async src="//cyberstatic.net/clientscript/custom/codeblock_controls.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9SNPZSB2SN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9SNPZSB2SN');
+</script>
+
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(50312308, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/50312308" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+
+<script async>
+<!--
+	// Main vBulletin Javascript Initialization
+	vBulletin_init();
+//-->
+</script>
+
+<div id="top-link">
+	<span id="topicon" title="Наверх"></span><span id="toptext">Наверх</span>
+</div>
+
+<script async src="//yastatic.net/share2/share.js"></script>
+</div>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+window.orig_onload = window.onload;
+window.onload = function() {
+var cpost=document.location.hash.substring(1);var cpost2='';if(cpost){ var ispost=cpost.substring(0,4)=='post';
+					if(ispost)cpost2='post_'+cpost.substring(4);if((cobj = fetch_object(cpost))||(cobj = fetch_object(cpost2))){cobj.scrollIntoView(true);}
+					else if(ispost){cpostno = cpost.substring(4,cpost.length);if(parseInt(cpostno)>0){location.replace('https://www.cyberforum.ru/showthread.php?p='+cpostno);};} }
+
+if(typeof window.orig_onload == "function") window.orig_onload();
+}
+
+//]]>
+</script>
+</body>
+</html>
